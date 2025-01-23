@@ -1,68 +1,55 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babylon.js GLB Loader</title>
     <style>
-        body, #renderCanvas { width: 100%; height: 100%; margin: 0; }
+        body { margin: 0; }
+        canvas { width: 100%; height: 100%; display: block; }
     </style>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
     <script>
+        // Создаем сцену и движок
         const canvas = document.getElementById("renderCanvas");
         const engine = new BABYLON.Engine(canvas, true);
+        const scene = new BABYLON.Scene(engine);
 
-        const createScene = function() {
-            const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3.Black();
+        // Создаем камеру
+        const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 5, BABYLON.Vector3.Zero(), scene);
+        camera.attachControl(canvas, true);
 
-            const alpha = Math.PI / 4;
-            const beta = Math.PI / 3;
-            const radius = 8;
-            const target = new BABYLON.Vector3(0, 0, 0);
+        // Создаем свет
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-            const camera = new BABYLON.ArcRotateCamera("Camera", alpha, beta, radius, target, scene);
-            camera.attachControl(canvas, true);
-
-            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
-
-            // Создание кольца
-            const torus = BABYLON.MeshBuilder.CreateTorus("torus", { diameter: 2, thickness: 0.2 }, scene);
-            torus.position.y = 1; // Установите позицию кольца
-
-            const torusMaterial = new BABYLON.StandardMaterial("material", scene);
-            torusMaterial.diffuseColor = BABYLON.Color3.Random();
-            torus.material = torusMaterial;
-
-            torus.actionManager = new BABYLON.ActionManager(scene);
-            torus.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
-                function (evt) {
-                    const sourceTorus = evt.meshUnderPointer;
-                    // Вращение кольца при нажатии
-                    sourceTorus.rotation.x += Math.PI / 4; // Вращение на 45 градусов по оси X
-                    sourceTorus.rotation.y += Math.PI / 4; // Вращение на 45 градусов по оси Y
-
-                    // Изменение цвета кольца
-                    torusMaterial.diffuseColor = BABYLON.Color3.Random();
-                }));
-
-            const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 4, height: 4 });
-
-            const xrPromise = scene.createDefaultXRExperienceAsync({
-                floorMeshes: [ground]
+        // Загружаем GLB модель
+        BABYLON.SceneLoader.Append("dracon.glb", "", scene, function (scene) {
+            // Выводим имена и индексы всех мешей
+            scene.meshes.forEach((mesh, index) => {
+                console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
             });
 
-            return xrPromise.then((xrExperience) => {
-                console.log("Done, WebXR is enabled.");
-                return scene;
-            });
-        };
-
-        createScene().then(sceneToRender => {
-            engine.runRenderLoop(() => sceneToRender.render());
+            // Получаем первый меш по индексу
+            const index = 0; // Укажите индекс меша, который вы хотите получить
+            if (index < scene.meshes.length) {
+                const model = scene.meshes[index]; // Получаем меш по индексу
+                model.position.y = 0; // Устанавливаем позицию модели
+            } else {
+                console.error("Индекс выходит за пределы массива мешей.");
+            }
         });
 
-        window.addEventListener("resize", function() {
+        // Запускаем рендеринг
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        // Обработка изменения размера окна
+        window.addEventListener("resize", function () {
             engine.resize();
         });
     </script>

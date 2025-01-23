@@ -37,7 +37,14 @@
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
                 const model = scene.meshes[index]; // Получаем меш по индексу
-                model.position.y = 0; // Устанавливаем позицию модели
+                
+                // Уменьшаем модель
+                model.scaling.x = 0.5; // Уменьшение по оси X
+                model.scaling.y = 0.5; // Уменьшение по оси Y
+                model.scaling.z = 0.5; // Уменьшение по оси Z
+
+                // Перемещаем модель вниз
+                model.position.y = -1; // Устанавливаем позицию модели ниже
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }

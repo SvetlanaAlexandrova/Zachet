@@ -1,8 +1,9 @@
 <html>
 <head>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
     <style>
-        body,#renderCanvas { width: 100%; height: 100%;}
+        body, #renderCanvas { width: 100%; height: 100%; margin: 0; }
     </style>
 </head>
 <body>
@@ -13,10 +14,10 @@
 
         const createScene = function() {
             const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3.Black;
+            scene.clearColor = new BABYLON.Color3.Black();
 
-            const alpha =  Math.PI/4;
-            const beta = Math.PI/3;
+            const alpha = Math.PI / 4;
+            const beta = Math.PI / 3;
             const radius = 8;
             const target = new BABYLON.Vector3(0, 0, 0);
 
@@ -25,26 +26,16 @@
 
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
-            const box = BABYLON.MeshBuilder.CreateBox("box", {});
-            box.position.x = 0.5;
-            box.position.y = 1;
+            // Загрузка 3D-модели
+            BABYLON.SceneLoader.Append("path/to/your/model/", "model.glb", scene, function (scene) {
+                // Модель загружена, можно настроить её
+                const model = scene.getMeshByName("YourModelName"); // Замените на имя вашей модели
+                if (model) {
+                    model.position.y = 1; // Установите позицию модели
+                }
+            });
 
-            const boxMaterial = new BABYLON.StandardMaterial("material", scene);
-            boxMaterial.diffuseColor = BABYLON.Color3.Random();
-            box.material = boxMaterial;
-
-            box.actionManager = new BABYLON.ActionManager(scene);
-            box.actionManager.registerAction(
-                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
-                function (evt) {
-                    const sourceBox = evt.meshUnderPointer;
-                    sourceBox.position.x += 0.1;
-                    sourceBox.position.y += 0.1;
-
-                    boxMaterial.diffuseColor = BABYLON.Color3.Random();
-                }));
-
-            const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 4, height: 4});
+            const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 4, height: 4 });
 
             const xrPromise = scene.createDefaultXRExperienceAsync({
                 floorMeshes: [ground]
@@ -58,6 +49,10 @@
 
         createScene().then(sceneToRender => {
             engine.runRenderLoop(() => sceneToRender.render());
+        });
+
+        window.addEventListener("resize", function() {
+            engine.resize();
         });
     </script>
 </body>

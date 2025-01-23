@@ -7,11 +7,20 @@
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
+        #buttonContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
     </style>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 </head>
 <body>
+    <div id="buttonContainer">
+        <button id="transformButton">Transform Rabbit to Hat</button>
+    </div>
     <canvas id="renderCanvas"></canvas>
     <script>
         // Создаем сцену и движок
@@ -26,7 +35,9 @@
         // Создаем свет
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        // Загружаем GLB модель
+        let modelModel;
+
+        // Загружаем GLB модель 
         BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
@@ -36,32 +47,30 @@
             // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
-                const model = scene.meshes[index]; // Получаем меш по индексу
-                
-                // Уменьшаем модель
-                model.scaling.x = 0.4; // Уменьшение по оси X
-                model.scaling.y = 0.4; // Уменьшение по оси Y
-                model.scaling.z = 0.4; // Уменьшение по оси Z
-
-                // Перемещаем модель вниз
-                model.position.y = -1; // Устанавливаем позицию модели ниже
-
-                // Добавляем обработчик событий для вращения модели
-                model.actionManager = new BABYLON.ActionManager(scene);
-                model.actionManager.registerAction(
-                    new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
-                    function (evt) {
-                        const sourceModel = evt.meshUnderPointer;
-                        if (sourceModel) {
-                            // Вращение модели по оси Y
-                            sourceModel.rotation.y += Math.PI / 4; // Вращение на 45 градусов
-                        }
-                    })
-                );
+                rabbitModel = scene.meshes[index]; // Сохраняем ссылку на модель кролика
+                rabbitModel.position.y = 0; // Устанавливаем позицию модели
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }
         });
+
+        // Функция для замены первой модели на вторую
+        function transformRabbitToHat() {
+            if (Model) {
+                // Удаляем модель кролика
+                Model.dispose();
+
+                // Загружаем модель шляпы
+                BABYLON.SceneLoader.Append("model2.glb", "", scene, function (scene) {
+                    // Получаем первый меш шляпы
+                    const hatMesh = scene.meshes[0]; // Предполагаем, что шляпа - это первый меш
+                    hatMesh.position.y = 0; // Устанавливаем позицию шляпы
+                });
+            }
+        }
+
+        // Обработчик события нажатия на кнопку
+        document.getElementById("transformButton").addEventListener("click", transformRabbitToHat);
 
         // Запускаем рендеринг
         engine.runRenderLoop(function () {

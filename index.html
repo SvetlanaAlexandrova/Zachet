@@ -52,8 +52,10 @@
                     new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
                     function (evt) {
                         const sourceModel = evt.meshUnderPointer;
-                        // Вращение модели по оси Y
-                        sourceModel.rotation.y += Math.PI / 4; // Вращение на 45 градусов
+                        if (sourceModel) {
+                            // Вращение модели по оси Y
+                            sourceModel.rotation.y += Math.PI / 4; // Вращение на 45 градусов
+                        }
                     })
                 );
             } else {

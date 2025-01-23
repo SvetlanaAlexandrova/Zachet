@@ -55,8 +55,8 @@
                 currentModel.scaling.y = 0.4; // Уменьшение по оси Y
                 currentModel.scaling.z = 0.4; // Уменьшение по оси Z
 
-                // Перемещаем модель вниз
-                currentModel.position.y = -1; // Устанавливаем позицию модели ниже
+                // Устанавливаем позицию модели выше
+                currentModel.position.y = 0; // Устанавливаем позицию модели на уровне земли
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }
@@ -87,8 +87,8 @@
                     currentModel.scaling.y = 0.4; // Уменьшение по оси Y
                     currentModel.scaling.z = 0.4; // Уменьшение по оси Z
 
-                    // Перемещаем модель вниз
-                    currentModel.position.y = -1; // Устанавливаем позицию модели ниже
+                    // Устанавливаем позицию модели выше
+                    currentModel.position.y = 0; // Устанавливаем позицию модели на уровне земли
                 } else {
                     console.error("Индекс выходит за пределы массива мешей.");
                 }
@@ -102,8 +102,4 @@
 
         // Обработка изменения размера окна
         window.addEventListener("resize", function () {
-            engine.resize();
-        });
-    </script>
-</body>
-</html>
+            engine.resize

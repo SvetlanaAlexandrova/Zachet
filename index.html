@@ -45,6 +45,17 @@
 
                 // Перемещаем модель вниз
                 model.position.y = -1; // Устанавливаем позицию модели ниже
+
+                // Добавляем обработчик событий для вращения модели
+                model.actionManager = new BABYLON.ActionManager(scene);
+                model.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
+                    function (evt) {
+                        const sourceModel = evt.meshUnderPointer;
+                        // Вращение модели по оси Y
+                        sourceModel.rotation.y += Math.PI / 4; // Вращение на 45 градусов
+                    })
+                );
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }

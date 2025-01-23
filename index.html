@@ -43,9 +43,6 @@
                 model.scaling.y = 0.4; // Уменьшение по оси Y
                 model.scaling.z = 0.4; // Уменьшение по оси Z
 
-                // Устанавливаем изначальную позицию модели по оси Y на 180
-                model.position.y = 180; // Устанавливаем позицию модели выше
-
                 // Добавляем обработчик событий для переворота модели
                 model.actionManager = new BABYLON.ActionManager(scene);
                 model.actionManager.registerAction(

@@ -38,8 +38,8 @@
         // Переменная для хранения текущей модели
         let currentModel;
 
-        // Загружаем GLB модель
-        BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
+        // Загружаем первую GLB модель
+        BABYLON.SceneLoader.Append("model1.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
@@ -48,15 +48,18 @@
             // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
-                const model = scene.meshes[index]; // Получаем меш по индексу
+                currentModel = scene.meshes[index]; // Получаем меш по индексу
                 
                 // Уменьшаем модель
-                model.scaling.x = 0.4; // Уменьшение по оси X
-                model.scaling.y = 0.4; // Уменьшение по оси Y
-                model.scaling.z = 0.4; // Уменьшение по оси Z
+                currentModel.scaling.x = 0.4; // Уменьшение по оси X
+                currentModel.scaling.y = 0.4; // Уменьшение по оси Y
+                currentModel.scaling.z = 0.4; // Уменьшение по оси Z
 
                 // Перемещаем модель вниз
-                model.position.y = -1; // Устанавливаем позицию модели ниже
+                currentModel.position.y = -1; // Устанавливаем позицию модели ниже
+            } else {
+                console.error("Индекс выходит за пределы массива мешей.");
+            }
         });
 
         // Обработчик события для кнопки

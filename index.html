@@ -47,8 +47,8 @@
             // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
-                rabbitModel = scene.meshes[index]; // Сохраняем ссылку на модель кролика
-                rabbitModel.position.y = 0; // Устанавливаем позицию модели
+                Model = scene.meshes[index]; // Сохраняем ссылку на модель кролика
+                Model.position.y = 0; // Устанавливаем позицию модели
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }

@@ -27,7 +27,7 @@
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
         // Загружаем GLB модель
-        BABYLON.SceneLoader.Append("dracon.glb", "", scene, function (scene) {
+        BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);

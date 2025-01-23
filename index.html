@@ -39,7 +39,7 @@
         let currentModel;
 
         // Загружаем первую GLB модель
-        BABYLON.SceneLoader.Append("model1.glb", "", scene, function (scene) {
+        BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);

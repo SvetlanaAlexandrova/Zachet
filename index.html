@@ -1,7 +1,6 @@
 <html>
 <head>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
     <style>
         body, #renderCanvas { width: 100%; height: 100%; margin: 0; }
     </style>
@@ -26,14 +25,24 @@
 
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
-            // Загрузка 3D-модели
-            BABYLON.SceneLoader.Append("model.glb", scene, function (scene) {
-                // Модель загружена, можно настроить её
-                const model = scene.getMeshByName("model"); // Замените на имя вашей модели
-                if (model) {
-                    model.position.y = 1; // Установите позицию модели
-                }
-            });
+            // Создание кольца
+            const torus = BABYLON.MeshBuilder.CreateTorus("torus", { diameter: 2, thickness: 0.2 }, scene);
+            torus.position.y = 1; // Установите позицию кольца
+
+            const torusMaterial = new BABYLON.StandardMaterial("material", scene);
+            torusMaterial.diffuseColor = BABYLON.Color3.Random();
+            torus.material = torusMaterial;
+
+            torus.actionManager = new BABYLON.ActionManager(scene);
+            torus.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
+                function (evt) {
+                    const sourceTorus = evt.meshUnderPointer;
+                    sourceTorus.position.x += 0.1;
+                    sourceTorus.position.y += 0.1;
+
+                    torusMaterial.diffuseColor = BABYLON.Color3.Random();
+                }));
 
             const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 4, height: 4 });
 

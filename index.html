@@ -7,12 +7,21 @@
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
+        #rotateButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
+    <button id="rotateButton">Вращать модель</button>
     <script>
         // Создаем сцену и движок
         const canvas = document.getElementById("renderCanvas");
@@ -27,8 +36,7 @@
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
         let model; // Переменная для хранения модели
-        let isDragging = false; // Флаг для отслеживания состояния перетаскивания
-        let previousMousePosition = null; // Хранит предыдущую позицию мыши
+        let rotationSpeed = 0.01; // Скорость вращения
 
         // Загружаем GLB модель
         BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
@@ -54,23 +62,11 @@
             }
         });
 
-        // Обработчик событий для мыши
-        canvas.addEventListener("pointerdown", function (evt) {
-            if (model && evt.button === 0) { // Проверяем, что нажата левая кнопка мыши
-                isDragging = true;
-                previousMousePosition = { x: evt.clientX, y: evt.clientY };
-            }
-        });
-
-        canvas.addEventListener("pointerup", function () {
-            isDragging = false;
-        });
-
-        canvas.addEventListener("pointermove", function (evt) {
-            if (isDragging && model) {
-                const deltaX = evt.clientX - previousMousePosition.x;
-                model.rotation.y += deltaX * 0.01; // Вращение модели по оси Y
-                previousMousePosition = { x: evt.clientX, y: evt.clientY };
+        // Обработчик события для кнопки
+        document.getElementById("rotateButton").addEventListener("click", function () {
+            if (model) {
+                // Вращаем модель по оси Y
+                model.rotation.y += Math.PI / 4; // Вращение на 45 градусов
             }
         });
 

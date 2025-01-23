@@ -38,9 +38,11 @@
                 new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
                 function (evt) {
                     const sourceTorus = evt.meshUnderPointer;
-                    sourceTorus.position.x += 0.1;
-                    sourceTorus.position.y += 0.1;
+                    // Вращение кольца при нажатии
+                    sourceTorus.rotation.x += Math.PI / 4; // Вращение на 45 градусов по оси X
+                    sourceTorus.rotation.y += Math.PI / 4; // Вращение на 45 градусов по оси Y
 
+                    // Изменение цвета кольца
                     torusMaterial.diffuseColor = BABYLON.Color3.Random();
                 }));
 

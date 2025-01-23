@@ -7,12 +7,21 @@
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
+        #rotateButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
+    <button id="rotateButton">Вращать модель</button>
     <script>
         // Создаем сцену и движок
         const canvas = document.getElementById("renderCanvas");
@@ -26,8 +35,11 @@
         // Создаем свет
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        // Загружаем первую GLB модель
-        BABYLON.SceneLoader.Append("model1.glb", "", scene, function (scene) {
+        let model; // Переменная для хранения модели
+        let rotationSpeed = 0.01; // Скорость вращения
+
+        // Загружаем GLB модель
+        BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
@@ -36,34 +48,25 @@
             // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
-                const model = scene.meshes[index]; // Получаем меш по индексу
+                model = scene.meshes[index]; // Получаем меш по индексу
                 
                 // Уменьшаем модель
                 model.scaling.x = 0.4; // Уменьшение по оси X
                 model.scaling.y = 0.4; // Уменьшение по оси Y
                 model.scaling.z = 0.4; // Уменьшение по оси Z
 
-                // Устанавливаем изначальную позицию модели по оси Y
-                model.position.y = 1; // Устанавливаем позицию модели выше
-
-                // Добавляем обработчик событий для загрузки другой модели
-                model.actionManager = new BABYLON.ActionManager(scene);
-                model.actionManager.registerAction(
-                    new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
-                    function (evt) {
-                        // Удаляем текущую модель
-                        scene.meshes.forEach(mesh => {
-                            mesh.dispose(); // Удаляем текущую модель из сцены
-                        });
-
-                        // Загружаем другую модель
-                        BABYLON.SceneLoader.Append("model2.glb", "", scene, function (scene) {
-                            console.log("Вторая модель загружена.");
-                        });
-                    })
-                );
+                // Перемещаем модель вниз
+                model.position.y = -1; // Устанавливаем позицию модели ниже
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
+            }
+        });
+
+        // Обработчик события для кнопки
+        document.getElementById("rotateButton").addEventListener("click", function () {
+            if (model) {
+                // Вращаем модель по оси Y
+                model.rotation.y += Math.PI / 4; // Вращение на 45 градусов
             }
         });
 

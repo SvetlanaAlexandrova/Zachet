@@ -46,16 +46,16 @@
                 // Перемещаем модель вниз
                 model.position.y = -1; // Устанавливаем позицию модели ниже
 
-                // Добавляем обработчик событий для изменения цвета модели
+                // Добавляем обработчик событий для изменения размера модели
                 model.actionManager = new BABYLON.ActionManager(scene);
                 model.actionManager.registerAction(
                     new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
                     function (evt) {
                         const sourceModel = evt.meshUnderPointer;
-                        // Изменение цвета модели на случайный
-                        if (sourceModel.material) {
-                            sourceModel.material.diffuseColor = BABYLON.Color3.Random();
-                        }
+                        // Увеличение размера модели на 10%
+                        sourceModel.scaling.x *= 1.1; // Увеличение по оси X
+                        sourceModel.scaling.y *= 1.1; // Увеличение по оси Y
+                        sourceModel.scaling.z *= 1.1; // Увеличение по оси Z
                     })
                 );
             } else {

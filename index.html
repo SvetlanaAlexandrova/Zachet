@@ -26,6 +26,10 @@
         // Создаем свет
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
+        let model; // Переменная для хранения модели
+        let isDragging = false; // Флаг для отслеживания состояния перетаскивания
+        let previousMousePosition = null; // Хранит предыдущую позицию мыши
+
         // Загружаем GLB модель
         BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
@@ -36,7 +40,7 @@
             // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
-                const model = scene.meshes[index]; // Получаем меш по индексу
+                model = scene.meshes[index]; // Получаем меш по индексу
                 
                 // Уменьшаем модель
                 model.scaling.x = 0.4; // Уменьшение по оси X
@@ -45,21 +49,28 @@
 
                 // Перемещаем модель вниз
                 model.position.y = -1; // Устанавливаем позицию модели ниже
-
-                // Добавляем обработчик событий для вращения модели
-                model.actionManager = new BABYLON.ActionManager(scene);
-                model.actionManager.registerAction(
-                    new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
-                    function (evt) {
-                        const sourceModel = evt.meshUnderPointer;
-                        if (sourceModel) {
-                            // Вращение модели по оси Y
-                            sourceModel.rotation.y += Math.PI / 4; // Вращение на 45 градусов
-                        }
-                    })
-                );
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
+            }
+        });
+
+        // Обработчик событий для мыши
+        canvas.addEventListener("pointerdown", function (evt) {
+            if (model && evt.button === 0) { // Проверяем, что нажата левая кнопка мыши
+                isDragging = true;
+                previousMousePosition = { x: evt.clientX, y: evt.clientY };
+            }
+        });
+
+        canvas.addEventListener("pointerup", function () {
+            isDragging = false;
+        });
+
+        canvas.addEventListener("pointermove", function (evt) {
+            if (isDragging && model) {
+                const deltaX = evt.clientX - previousMousePosition.x;
+                model.rotation.y += deltaX * 0.01; // Вращение модели по оси Y
+                previousMousePosition = { x: evt.clientX, y: evt.clientY };
             }
         });
 

@@ -27,7 +27,7 @@
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
 
             // Загрузка 3D-модели
-            BABYLON.SceneLoader.Append("path/to/your/model/", "model.glb", scene, function (scene) {
+            BABYLON.SceneLoader.Append("model.glb", scene, function (scene) {
                 // Модель загружена, можно настроить её
                 const model = scene.getMeshByName("model"); // Замените на имя вашей модели
                 if (model) {

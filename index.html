@@ -29,7 +29,7 @@
             // Загрузка 3D-модели
             BABYLON.SceneLoader.Append("path/to/your/model/", "model.glb", scene, function (scene) {
                 // Модель загружена, можно настроить её
-                const model = scene.getMeshByName("YourModelName"); // Замените на имя вашей модели
+                const model = scene.getMeshByName("model"); // Замените на имя вашей модели
                 if (model) {
                     model.position.y = 1; // Установите позицию модели
                 }

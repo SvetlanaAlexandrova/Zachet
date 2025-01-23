@@ -38,24 +38,12 @@
                 new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
                 function (evt) {
                     const sourceTorus = evt.meshUnderPointer;
-
                     // Вращение кольца при нажатии
                     sourceTorus.rotation.x += Math.PI / 4; // Вращение на 45 градусов по оси X
                     sourceTorus.rotation.y += Math.PI / 4; // Вращение на 45 градусов по оси Y
 
                     // Изменение цвета кольца
                     torusMaterial.diffuseColor = BABYLON.Color3.Random();
-
-                    // Увеличение или уменьшение кольца
-                    if (sourceTorus.scaling.x < 2) {
-                        sourceTorus.scaling.x += 0.1; // Увеличение по оси X
-                        sourceTorus.scaling.y += 0.1; // Увеличение по оси Y
-                        sourceTorus.scaling.z += 0.1; // Увеличение по оси Z
-                    } else {
-                        sourceTorus.scaling.x = 1; // Сброс до исходного размера
-                        sourceTorus.scaling.y = 1;
-                        sourceTorus.scaling.z = 1;
-                    }
                 }));
 
             const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 4, height: 4 });

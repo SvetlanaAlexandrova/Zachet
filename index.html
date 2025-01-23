@@ -26,8 +26,8 @@
         // Создаем свет
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        // Загружаем GLB модель
-        BABYLON.SceneLoader.Append("model.glb", "", scene, function (scene) {
+        // Загружаем первую GLB модель
+        BABYLON.SceneLoader.Append("model1.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
@@ -43,14 +43,23 @@
                 model.scaling.y = 0.4; // Уменьшение по оси Y
                 model.scaling.z = 0.4; // Уменьшение по оси Z
 
-                // Добавляем обработчик событий для переворота модели
+                // Устанавливаем изначальную позицию модели по оси Y
+                model.position.y = 1; // Устанавливаем позицию модели выше
+
+                // Добавляем обработчик событий для загрузки другой модели
                 model.actionManager = new BABYLON.ActionManager(scene);
                 model.actionManager.registerAction(
                     new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, 
                     function (evt) {
-                        const sourceModel = evt.meshUnderPointer;
-                        // Переворот модели по оси Y на 180 градусов
-                        sourceModel.rotation.y += Math.PI; // Вращение на 180 градусов
+                        // Удаляем текущую модель
+                        scene.meshes.forEach(mesh => {
+                            mesh.dispose(); // Удаляем текущую модель из сцены
+                        });
+
+                        // Загружаем другую модель
+                        BABYLON.SceneLoader.Append("model2.glb", "", scene, function (scene) {
+                            console.log("Вторая модель загружена.");
+                        });
                     })
                 );
             } else {
